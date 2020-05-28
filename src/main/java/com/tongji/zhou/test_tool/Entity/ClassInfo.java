@@ -1,10 +1,11 @@
 package com.tongji.zhou.test_tool.Entity;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClassInfo {
     private String class_name;
-    private List<String> methods;
+    private Map<String,List<String>> methods;
 
     public List<String> getTest_cases() {
         return test_cases;
@@ -23,11 +24,11 @@ public class ClassInfo {
         this.class_name = class_name;
     }
 
-    public List<String> getMethods() {
+    public Map<String, List<String>> getMethods() {
         return methods;
     }
 
-    public void setMethods(List<String> methods) {
+    public void setMethods(Map<String, List<String>> methods) {
         this.methods = methods;
     }
 }

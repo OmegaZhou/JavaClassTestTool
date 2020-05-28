@@ -36,7 +36,7 @@ public class WebController {
             var methods = TestServices.getMethods(FileConfig.ClassPath + item.getName() + "." + item.getName());
             info.setMethods(methods);
             info.setTest_cases(new ArrayList<>());
-            for (var method : methods) {
+            for (var method : methods.get("simple_name")) {
                 var files = item.list();
                 boolean flag = true;
                 for (var name : files) {
