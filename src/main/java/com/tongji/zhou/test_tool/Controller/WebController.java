@@ -122,7 +122,7 @@ public class WebController {
 
     @GetMapping("removeMethod")
     @ResponseBody
-    public String removeClass(
+    public String removeMethod(
             @RequestParam("class_name") String class_name, @RequestParam("method_name") String method_name) {
         try {
             File file = new File(FileConfig.JavaFilePath + class_name + "/" + method_name + ".csv");

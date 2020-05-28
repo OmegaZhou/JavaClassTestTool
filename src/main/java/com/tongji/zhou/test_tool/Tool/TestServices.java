@@ -100,6 +100,8 @@ public class TestServices {
                 testResult.setResult(true_result.equals(return_v.toString()));
                 testResult.setReal_result(return_v.toString());
                 testResult.setRight_result(true_result);
+                testResult.setClass_name(clazz.getSimpleName());
+                testResult.setMethod_name(method_name);
                 results.add(testResult);
             }
 
