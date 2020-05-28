@@ -40,7 +40,23 @@ public class TestServices {
             var methods=clazz.getMethods();
             for(var item:methods){
                 if(item.getDeclaringClass()==clazz){
-                    result.add(item.getName());
+                    var name=new StringBuffer();
+                    if(Modifier.isStatic(item.getModifiers())){
+                        name.append("static ");
+                    }
+                    name.append(item.getReturnType().getSimpleName());
+                    name.append(" ");
+                    name.append(item.getName());
+                    name.append("(");
+                    var paras=item.getParameterTypes();
+                    for(int i=0;i<paras.length;++i){
+                        if(i!=0){
+                            name.append(", ");
+                        }
+                        name.append(paras[i].getSimpleName());
+                    }
+                    name.append(")");
+                    result.add(name.toString());
                 }
             }
         }catch (Exception e){
