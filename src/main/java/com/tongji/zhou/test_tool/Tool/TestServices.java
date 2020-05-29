@@ -89,12 +89,16 @@ public class TestServices {
                 }
                 Object return_v;
                 String true_result = scanner.next();
-
-                if (Modifier.isStatic(method.getModifiers())) {
-                    return_v = method.invoke(null, parameters.toArray());
-                } else {
-                    return_v = method.invoke(clazz.getDeclaredConstructor().newInstance());
+                try{
+                    if (Modifier.isStatic(method.getModifiers())) {
+                        return_v = method.invoke(null, parameters.toArray());
+                    } else {
+                        return_v = method.invoke(clazz.getDeclaredConstructor().newInstance());
+                    }
+                }catch (Exception e){
+                    return_v=null;
                 }
+
                 TestResult testResult = new TestResult();
                 testResult.setParameters(parameters);
                 testResult.setResult(true_result.equals(return_v.toString()));

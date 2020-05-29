@@ -174,7 +174,7 @@
                         <td class="col-3 mr-auto" data-bind="text:$data.real_result">
 
                         </td>
-                        <td class="col-2 mr-auto" data-bind="text:$data.result">
+                        <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
 
                         </td>
                     </tr>
@@ -203,7 +203,7 @@
                             <td class="col-3 mr-auto" data-bind="text:$data.real_result">
 
                             </td>
-                            <td class="col-2 mr-auto" data-bind="text:$data.result">
+                            <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
 
                             </td>
                         </tr>
@@ -247,15 +247,15 @@
                 </thead>
                 <tbody data-bind="foreach: test_results" class="w-100">
                     <tr class="row mx-0">
-                        <td class="col-4 mr-auto" data-bind="text:'第'+($index+1)+'次测试'">
+                        <td class="col-3 mr-auto" data-bind="text:'第'+($index()+1)+'次测试'">
                         </td>
-                        <td class="col-3 mr-auto" data-bind="text:$data.result">
+                        <td class="col-3 mr-auto" data-bind="text:cal_result($data.result)">
 
                         </td>
-                        <td class="col-3 mr-auto" data-bind="text:model.test_results2()[$index()].result">
+                        <td class="col-3 mr-auto" data-bind="text:cal_result(model.test_results2()[$index()].result)">
 
                         </td>
-                        <td class="col-2 mr-auto"
+                        <td class="col-3 mr-auto"
                             data-bind="text:model.test_results2()[$index()].right_result==$data.right_result?'相同':'不同'">
 
                         </td>
@@ -410,6 +410,7 @@
         var ctx = $("#pie");
         var error_count = 0
         var right_count = 0
+        var runtime_error_count = 0
         for (var i = 0; i < model.test_results().length; ++i) {
             var item = model.test_results()[i]
             if (item.result) {
@@ -429,10 +430,10 @@
             },
             type: 'pie',
             data: {
-                labels: ["error_value", "correct_value"],
+                labels: ["error_value", "correct_value","runtime_error"],
                 datasets: [{
-                    data: [error_count, right_count],
-                    backgroundColor: ['#007bff', '#dc3545']
+                    data: [error_count, right_count,runtime_error_count],
+                    backgroundColor: ['#007bff', '#dc3545','#28a745']
                 }]
             }
         })
@@ -444,12 +445,15 @@
         ctx = $("#pie2");
         error_count = 0
         right_count = 0
+        runtime_error_count = 0
         for (var i = 0; i < model.test_results2().length; ++i) {
             var item = model.test_results()[i]
-            if (item.result) {
-                ++right_count
+            if (item.result == null) {
+                runtime_error_count++
+            } else if (item.result) {
+                right_count++
             } else {
-                ++error_count
+                error_count++
             }
         }
         console.log(right_count)
@@ -463,13 +467,24 @@
             },
             type: 'pie',
             data: {
-                labels: ["error_value", "correct_value"],
+                labels: ["error_value", "correct_value","runtime_error"],
                 datasets: [{
-                    data: [error_count, right_count],
-                    backgroundColor: ['#007bff', '#dc3545']
+                    data: [error_count, right_count,runtime_error_count],
+                    backgroundColor: ['#007bff', '#dc3545','#28a745']
                 }]
             }
         })
+    }
+
+    function cal_result(status) {
+        console.log(status,"ddd")
+        if (status == null) {
+            return "运行错误"
+        } else if (status) {
+            return "输出正确"
+        } else {
+            return "输出错误"
+        }
     }
 </script>
 
