@@ -73,8 +73,13 @@ public class TestServices {
         List<TestResult> results = new ArrayList<>();
         Scanner scanner = null;
         try {
+            // 从输入测试用例文件中获取待测模块输入
             scanner = new Scanner(new File(test_case_path));
+            
+            // 获取待测类
             Class clazz = Class.forName(class_name);
+            
+            // 获取待测方法
             var methods = clazz.getMethods();
             Method method = null;
             for (var item : methods) {
@@ -82,29 +87,36 @@ public class TestServices {
                     method = item;
                 }
             }
+            
             while (scanner.hasNext()) {
                 var para_num = method.getParameterCount();
                 List<Object> parameters = new ArrayList<>();
+                
+                // 构造待测方法使用的参数列表
                 for (int i = 0; i < para_num; ++i) {
                     parameters.add(convert_value(scanner.next(), method.getParameterTypes()[i]));
                 }
                 Object return_v;
-                String true_result = scanner.next();
+                var true_result=method.getReturnType().getConstructor(String.class).newInstance(scanner.next());
                 try{
+                    // 判断待测方法是否是static方法，从而以不同形式调用该方法
                     if (Modifier.isStatic(method.getModifiers())) {
                         return_v = method.invoke(null, parameters.toArray());
                     } else {
-                        return_v = method.invoke(clazz.getDeclaredConstructor().newInstance());
+                        return_v = method.invoke(clazz.getDeclaredConstructor().newInstance(),parameters.toArray());
                     }
                 }catch (Exception e){
                     return_v=null;
                 }
-
+                
+                
+                // 比对模块输出结果与预计结果的差异
+                // 并设置测试结果信息
                 TestResult testResult = new TestResult();
                 testResult.setParameters(parameters);
-                testResult.setResult(true_result.equals(return_v.toString()));
+                testResult.setResult(true_result.equals(return_v));
                 testResult.setReal_result(return_v.toString());
-                testResult.setRight_result(true_result);
+                testResult.setRight_result(true_result.toString());
                 testResult.setClass_name(clazz.getSimpleName());
                 testResult.setMethod_name(method_name);
                 results.add(testResult);
