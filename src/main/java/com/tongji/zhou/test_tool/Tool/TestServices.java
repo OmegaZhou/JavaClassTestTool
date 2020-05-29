@@ -71,8 +71,9 @@ public class TestServices {
 
     public static List<TestResult> testClass(String class_name, String test_case_path, String method_name) {
         List<TestResult> results = new ArrayList<>();
+        Scanner scanner = null;
         try {
-            Scanner scanner = new Scanner(new File(test_case_path));
+            scanner = new Scanner(new File(test_case_path));
             Class clazz = Class.forName(class_name);
             var methods = clazz.getMethods();
             Method method = null;
@@ -111,6 +112,9 @@ public class TestServices {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }finally {
+            scanner.close();
+            Runtime.getRuntime().gc();
         }
         return results;
     }
