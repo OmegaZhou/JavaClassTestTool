@@ -29,7 +29,14 @@ public class TestServices {
         }
         return str;
     }
+    private static boolean compareResult(Object v1,Object v2,Class type){
+        if (type == float.class || type == Float.class || type == double.class || type == Double.class) {
+            return Math.abs((Double)(v1)-(Double)(v2))<1e-6;
+        }else{
+            return v1.equals(v2);
+        }
 
+    }
     public static Map<String, List<String>> getMethods(String class_name) {
         List<String> result = new ArrayList<>();
         List<String> origin = new ArrayList<>();
@@ -114,7 +121,7 @@ public class TestServices {
                 // 并设置测试结果信息
                 TestResult testResult = new TestResult();
                 testResult.setParameters(parameters);
-                testResult.setResult(true_result.equals(return_v));
+                testResult.setResult(compareResult(return_v,true_result,method.getReturnType()));
                 testResult.setReal_result(return_v.toString());
                 testResult.setRight_result(true_result.toString());
                 testResult.setClass_name(clazz.getSimpleName());
