@@ -583,6 +583,15 @@
 
             }
         )
+        function get_class_index(name) {
+            var classes = model.classes()
+            for (var i = 0; i < classes.length; ++i) {
+                if (classes[i].class_name == name) {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
         function show_method(index) {
             var methods = new Array()
@@ -624,7 +633,11 @@
                 processData: false,
                 success: result => {
                     console.log(result)
-                    location.reload();
+                    if (result == "success") {
+                        var class_index = get_class_index(model.now_class())
+                        model.classes()[class_index].test_cases[index] = method.simple_name + ".csv"
+                        show_method(class_index)
+                    }
                 },
                 contentType: false
             })
@@ -633,12 +646,28 @@
         function remove_test_case(index) {
             var method = model.methods()[index]
             $.get("api/removeMethod", { class_name: method.name, method_name: method.simple_name }, result => {
-                location.reload();
+                var class_index = get_class_index(model.now_class())
+                model.classes()[class_index].test_cases[index] = null
+                show_method(class_index)
             })
         }
         function removeClass(index) {
             $.get("api/removeClass", { class_name: model.classes()[index].class_name }, result => {
-                location.reload();
+                if (result == "success") {
+                    $.get("api/GetClasses", result => {
+                        model.classes(result)
+                        var name = model.now_class()
+                        var index = get_class_index(name)
+                        if (index == -1) {
+                            model.now_class('')
+                            model.methods([])
+                        } else {
+                            show_method(index)
+                        }
+                    })
+                } else {
+                    alert(result)
+                }
             })
         }
         function uploadClass(index) {
@@ -656,7 +685,22 @@
                 data: data,
                 processData: false,
                 success: result => {
-                    location.reload();
+                    if (result == "success") {
+                        $.get("api/GetClasses", result => {
+                            $("#class_file")[0].value=null
+                            model.classes(result)
+                            var name = model.now_class()
+                            var index = get_class_index(name)
+                            if (index == -1) {
+                                model.now_class('')
+                                model.methods([])
+                            } else {
+                                show_method(index)
+                            }
+                        })
+                    } else {
+                        alert(result)
+                    }
                 },
                 contentType: false
             })
@@ -783,7 +827,7 @@
             //导出
             var table_id = "#table1"
             $(table_id).tableExport({
-                fileName:"测试报告1",
+                fileName: "测试报告1",
                 type: "pdf",
                 pdfmake: {
                     enabled: true,
@@ -795,7 +839,7 @@
             if (model.is_compare() && model.test_results2().length != 0) {
                 table_id = "#table2"
                 $(table_id).tableExport({
-                    fileName:"测试报告2",
+                    fileName: "测试报告2",
                     type: "pdf",
                     pdfmake: {
                         enabled: true,
@@ -807,7 +851,7 @@
                 if (model.result_compared()) {
                     table_id = "#table3"
                     $(table_id).tableExport({
-                        fileName:"对比报告",
+                        fileName: "对比报告",
                         type: "pdf",
                         pdfmake: {
                             enabled: true,
