@@ -49,8 +49,8 @@
         }
     </style>
     <script>
-        window.addEventListener("load", function() {
-            setTimeout(function() {
+        window.addEventListener("load", function () {
+            setTimeout(function () {
                 document.querySelector('body').classList.add('loaded');
             }, 300);
         });
@@ -69,13 +69,15 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal-cookies" data-backdrop="false" aria-labelledby="modal-cookies" aria-hidden="true">
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-cookies" data-backdrop="false"
+        aria-labelledby="modal-cookies" aria-hidden="true">
         <div class="modal-dialog modal-dialog-aside left-4 right-4 bottom-4">
             <div class="modal-content bg-dark-dark">
                 <div class="modal-body">
                     <!-- Text -->
                     <p class="text-sm text-white mb-3">
-                        We use cookies so that our themes work for you. By using our website, you agree to our use of cookies.
+                        We use cookies so that our themes work for you. By using our website, you agree to our use of
+                        cookies.
                     </p>
                     <!-- Buttons -->
                     <a href="pages/utility/terms.html" class="btn btn-sm btn-white" target="_blank">Learn more</a>
@@ -93,7 +95,8 @@
                 Java Class Test Tool
             </a>
             <!-- Toggler -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Collapse -->
@@ -119,7 +122,8 @@
                 <div class="col-12 col-md-5 col-lg-6 order-md-2">
                     <!-- Image -->
                     <figure class="w-100">
-                        <img alt="Image placeholder" src="assets/img/svg/illustrations/illustration-3.svg" class="img-fluid mw-md-120">
+                        <img alt="Image placeholder" src="assets/img/svg/illustrations/illustration-3.svg"
+                            class="img-fluid mw-md-120">
                     </figure>
                 </div>
                 <div class="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5">
@@ -155,11 +159,12 @@
                     <h2 class=" mt-4">上传自定义Java类并选择待测类</h2>
                     <div class="mt-4 justify-content-center" style="display:flex">
                         <div class="form-group mt-2">
-                            
+
                             <input type="file" class="form-control-file" id="class_file">
                         </div>
                         <div>
-                            <button type="button" class="btn btn-default btn-secondary" onclick="uploadClass()">上传Java类</button>
+                            <button type="button" class="btn btn-default btn-secondary"
+                                onclick="uploadClass()">上传Java类</button>
                         </div>
                     </div>
                 </div>
@@ -199,13 +204,15 @@
     <section class="slice slice-lg bg-section-dark pt-5 pt-lg-8" id="step2">
         <!-- SVG separator -->
         <div class="shape-container shape-line shape-position-top shape-orientation-inverse">
-            <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve" class="">
+            <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px"
+                viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve" class="">
                 <polygon points="2560 0 2560 100 0 100"></polygon>
             </svg>
         </div>
         <!-- Container -->
         <div class="container position-relative zindex-100">
-            
+
             <div class="col">
                 <div class="row justify-content-center">
                     <div class="col-md-10 text-center">
@@ -244,9 +251,11 @@
                                         </td>
                                         <td class="col-4">
                                             <a data-bind="text:$data.test_case"></a>
-                                            <div data-bind="if:!$data.test_case" class="form-group" style="display: flex;">
+                                            <div data-bind="if:!$data.test_case" class="form-group"
+                                                style="display: flex;">
                                                 <label for="exampleFormControlFile1">选择测试用例</label>
-                                                <input type="file" class="form-control-file" data-bind="attr:{id:$data.simple_name}">
+                                                <input type="file" class="form-control-file"
+                                                    data-bind="attr:{id:$data.simple_name}">
                                             </div>
                                         </td>
                                         <td class="col-3">
@@ -258,14 +267,14 @@
                                                 <button type="button" class="btn btn-secondary btn-sm"
                                                     data-bind="attr:{onclick:'add_test_case('+$index()+')'}">上传测试用例</button>
                                             </div>
-                
+
                                         </td>
                                         <td class="col-1 mr-auto">
                                             <div data-bind="if:$data.test_case">
                                                 <button type="button" class="btn btn-secondary btn-sm"
                                                     data-bind="click:function(){test($index())}">测试</button>
                                             </div>
-                
+
                                         </td>
                                     </tr>
                                 </tbody>
@@ -297,25 +306,34 @@
                                 <div class="col-md-12">
                                     <div class="form-inline justify-content-center">
                                         <div class="form-group form-check">
-                                            <input type="checkbox" class="form-check-input" id="compare_checked" onclick="start_compare()">
+                                            <input type="checkbox" class="form-check-input" id="compare_checked"
+                                                onclick="start_compare()">
                                             <label class="form-check-label" for="exampleCheck1">启用对照组&emsp;</label>
                                         </div>
                                         <div class="form-group form-check" data-bind="if:model.test_results().length">
-                                            <input type="checkbox" class="form-check-input" id="pie_checked" onclick="start_show_pie()">
+                                            <input type="checkbox" class="form-check-input" id="pie_checked"
+                                                onclick="start_show_pie()">
                                             <label class="form-check-label" for="exampleCheck1">查看缺陷图&emsp;</label>
                                         </div>
                                         <div class="form-group form-check"
                                             data-bind="if:model.test_results().length&&model.test_results2().length">
-                                            <input type="checkbox" class="form-check-input" id="show_compare" onclick="show_compare()">
+                                            <input type="checkbox" class="form-check-input" id="show_compare"
+                                                onclick="show_compare()">
                                             <label class="form-check-label" for="exampleCheck1">查看对比</label>
                                         </div>
+                                        <div data-bind="if:model.test_results().length>0">
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                data-bind="click:function(){save_report()}">导出测试报告</button>
+                                        </div>
                                     </div>
-                        
-                                    <div class="row ml-1">
-                                        <h5 data-bind="text:'类'+model.result_name()"></h5>
-                                    </div>
-                                    <table class="table row mx-0">
+
+                                    <table id="table1" class="table row mx-0">
                                         <thead class="w-100">
+                                            <tr class="row mx-0">
+                                                <th colspan="4">
+                                                    <h5 data-bind="text:'类'+model.result_name()"></h5>
+                                                </th>
+                                            </tr>
                                             <tr class="row mx-0">
                                                 <th scope="col" class="col-4">测试用例</th>
                                                 <th scope="col" class="col-3">预计结果</th>
@@ -328,23 +346,26 @@
                                                 <td class="col-4 mr-auto" data-bind="text:$data.parameters">
                                                 </td>
                                                 <td class="col-3 mr-auto" data-bind="text:$data.right_result">
-                        
+
                                                 </td>
                                                 <td class="col-3 mr-auto" data-bind="text:$data.real_result">
-                        
+
                                                 </td>
                                                 <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
-                        
+
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
+
                                     <div data-bind="if:is_compare">
-                                        <div class="row ml-1">
-                                            <h5 data-bind="text:'类'+model.result_name2()"></h5>
-                                        </div>
-                                        <table class="table row mx-0">
+                                        <table id="table2" class="table row mx-0">
                                             <thead class="w-100">
+                                                <tr class="row mx-0">
+                                                    <th colspan="4">
+                                                        <h5 data-bind="text:'类'+model.result_name2()"></h5>
+                                                    </th>
+                                                </tr>
                                                 <tr class="row mx-0">
                                                     <th scope="col" class="col-4">测试用例</th>
                                                     <th scope="col" class="col-3">预计结果</th>
@@ -357,48 +378,56 @@
                                                     <td class="col-4 mr-auto" data-bind="text:$data.parameters">
                                                     </td>
                                                     <td class="col-3 mr-auto" data-bind="text:$data.right_result">
-                        
+
                                                     </td>
                                                     <td class="col-3 mr-auto" data-bind="text:$data.real_result">
-                        
+
                                                     </td>
                                                     <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
-                        
+
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                        
+
                                 </div>
                             </div>
-                        
+
                             <div class="text-center" data-bind="if:is_show">
                                 <div class="row ">
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4">
                                         <canvas id="pie" width="100%" height="100%"></canvas>
                                     </div>
-                        
+
                                 </div>
                                 <div class="row ">
                                     <div class="col-md-4"></div>
                                     <div class="col-md-4">
                                         <canvas id="pie2" width="100%" height="100%"></canvas>
                                     </div>
-                        
+
                                 </div>
                             </div>
-                        
+
                             <div class="row" data-bind="if:result_compared">
                                 <div class="col-md-12 text-center">
-                                    <table class="table row mx-0" data-bind="if:is_compare">
+                                    <table class="table row mx-0" data-bind="if:is_compare" id="table3">
+
                                         <thead class="w-100">
                                             <tr class="row mx-0">
-                                                <th scope="col" class="col-3">#</th>
-                                                <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
+                                                <th colspan="4">
+                                                    <h5>对比报告</h5>
                                                 </th>
-                                                <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
+                                            </tr>
+                                            <tr class="row mx-0">
+                                                <th scope="col" class="col-3">#</th>
+                                                <th scope="col" class="col-3"
+                                                    data-bind="text:'类'+model.test_results()[0].class_name">
+                                                </th>
+                                                <th scope="col" class="col-3"
+                                                    data-bind="text:'类'+model.test_results()[0].class_name">
                                                 </th>
                                                 <th scope="col" class="col-3">对比结果</th>
                                             </tr>
@@ -408,35 +437,39 @@
                                                 <td class="col-3 mr-auto" data-bind="text:'第'+($index()+1)+'次测试'">
                                                 </td>
                                                 <td class="col-3 mr-auto" data-bind="text:cal_result($data.result)">
-                        
+
                                                 </td>
-                                                <td class="col-3 mr-auto" data-bind="text:cal_result(model.test_results2()[$index()].result)">
-                        
+                                                <td class="col-3 mr-auto"
+                                                    data-bind="text:cal_result(model.test_results2()[$index()].result)">
+
                                                 </td>
                                                 <td class="col-3 mr-auto"
                                                     data-bind="text:model.test_results2()[$index()].right_result==$data.right_result?'相同':'不同'">
-                        
+
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                        
-                            </div>
-    </div>
 
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+        </div>
     </section>
- 
+
     <footer class="position-relative" id="footer-main">
         <div class="footer pt-lg-7 footer-dark bg-dark">
             <!-- SVG shape -->
             <div class="shape-container shape-line shape-position-top shape-orientation-inverse">
-                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve" class=" fill-section-secondary">
+                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px"
+                    viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve"
+                    class=" fill-section-secondary">
                     <polygon points="2560 0 2560 100 0 100"></polygon>
                 </svg>
             </div>
@@ -449,7 +482,8 @@
                             Java Class Test Tool
                         </a>
                         <!-- Webpixels' mission -->
-                        <p class="mt-4 text-sm opacity-8 pr-lg-4">A convenient Java Class Tool, just upload your Java classes & csv test cases, then get results.</p>
+                        <p class="mt-4 text-sm opacity-8 pr-lg-4">A convenient Java Class Tool, just upload your Java
+                            classes & csv test cases, then get results.</p>
                         <!-- Social -->
                         <ul class="nav mt-4">
                             <li class="nav-item">
@@ -480,7 +514,7 @@
                 <div class="row align-items-center justify-content-md-between pb-4">
                     <div class="col-md-6">
                         <div class="copyright text-sm font-weight-bold text-center text-md-left">
-                            Copyright &copy; 2020. Rest&Rent软件测试项目组  All rights reserved.
+                            Copyright &copy; 2020. Rest&Rent软件测试项目组 All rights reserved.
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -512,6 +546,10 @@
     <script src="assets/libs/svg-injector/dist/svg-injector.min.js"></script>
     <script src="assets/libs/feather-icons/dist/feather.min.js"></script>
     <!-- Quick JS -->
+    <script src="assets/js/libs/FileSaver/FileSaver.min.js"></script>
+    <script src="assets/js/libs/pdfmake/pdfmake.min.js"></script>
+    <script src="assets/js/libs/pdfmake/gbsn00lp_fonts.js"></script>
+    <script src="assets/js/tableExport.min.js"></script>
     <script src="assets/js/quick-website.js"></script>
     <script src="assets/js/knockout-3.5.1.js"></script>
     <script src="assets/js/Chart.js"></script>
@@ -542,10 +580,10 @@
                     console.log(result);
                     model.classes(result)
                 })
-    
+
             }
         )
-    
+
         function show_method(index) {
             var methods = new Array()
             console.log(model.classes()[index])
@@ -565,7 +603,7 @@
             model.methods(methods)
             model.now_class(model.classes()[index].class_name)
         }
-    
+
         function add_test_case(index) {
             console.log("sss")
             var data = new FormData()
@@ -591,7 +629,7 @@
                 contentType: false
             })
         }
-    
+
         function remove_test_case(index) {
             var method = model.methods()[index]
             $.get("api/removeMethod", { class_name: method.name, method_name: method.simple_name }, result => {
@@ -635,10 +673,10 @@
                     model.test_results2(result)
                 }
                 start_show_pie();
-    
+
             })
         }
-    
+
         function start_compare() {
             model.is_compare($("#compare_checked")[0].checked)
             if (!model.is_compare()) {
@@ -646,18 +684,18 @@
                 model.result_name2('')
             }
         }
-    
+
         function start_show_pie() {
             model.is_show($("#pie_checked")[0].checked)
             if (model.is_show()) {
                 show_pie();
             }
-    
+
         }
         function show_compare() {
             model.result_compared($("#show_compare")[0].checked)
         }
-    
+
         function show_pie() {
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';
@@ -684,18 +722,18 @@
                 },
                 type: 'pie',
                 data: {
-                    labels: ["error_value", "correct_value","runtime_error"],
+                    labels: ["error_value", "correct_value", "runtime_error"],
                     datasets: [{
-                        data: [error_count, right_count,runtime_error_count],
-                        backgroundColor: ['#DC143C', '#3CB371','#0000CD']
+                        data: [error_count, right_count, runtime_error_count],
+                        backgroundColor: ['#DC143C', '#3CB371', '#0000CD']
                     }]
                 }
             })
-    
+
             if (!model.test_results2().length) {
                 return;
             }
-    
+
             ctx = $("#pie2");
             error_count = 0
             right_count = 0
@@ -721,17 +759,17 @@
                 },
                 type: 'pie',
                 data: {
-                    labels: ["error_value", "correct_value","runtime_error"],
+                    labels: ["error_value", "correct_value", "runtime_error"],
                     datasets: [{
-                        data: [error_count, right_count,runtime_error_count],
-                        backgroundColor: ['#007bff', '#dc3545','#28a745']
+                        data: [error_count, right_count, runtime_error_count],
+                        backgroundColor: ['#007bff', '#dc3545', '#28a745']
                     }]
                 }
             })
         }
-    
+
         function cal_result(status) {
-            console.log(status,"ddd")
+            console.log(status, "ddd")
             if (status == null) {
                 return "运行错误"
             } else if (status) {
@@ -740,8 +778,53 @@
                 return "输出错误"
             }
         }
+
+        function save_report() {
+            //导出
+            var table_id = "#table1"
+            $(table_id).tableExport({
+                fileName:"测试报告1",
+                type: "pdf",
+                pdfmake: {
+                    enabled: true,
+                    docDefinition: {
+                        pageOrientation: 'landscape'
+                    }
+                },
+            });
+            if (model.is_compare() && model.test_results2().length != 0) {
+                table_id = "#table2"
+                $(table_id).tableExport({
+                    fileName:"测试报告2",
+                    type: "pdf",
+                    pdfmake: {
+                        enabled: true,
+                        docDefinition: {
+                            pageOrientation: 'landscape'
+                        }
+                    },
+                });
+                if (model.result_compared()) {
+                    table_id = "#table3"
+                    $(table_id).tableExport({
+                        fileName:"对比报告",
+                        type: "pdf",
+                        pdfmake: {
+                            enabled: true,
+                            docDefinition: {
+                                pageOrientation: 'landscape'
+                            }
+                        },
+                    });
+                }
+            }
+            console.log(table_id)
+
+
+        }
+
     </script>
-    
+
 </body>
 
 </html>
