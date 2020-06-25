@@ -1,491 +1,747 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>Test Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Webpixels">
+    <title>Java Class Test Tool</title>
+    <!-- Preloader -->
+    <style>
+        @keyframes hidePreloader {
+            0% {
+                width: 100%;
+                height: 100%;
+            }
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="/css/bootstrap.css">
+            100% {
+                width: 0;
+                height: 0;
+            }
+        }
 
-    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
-    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
-    <!--[if lt IE 9]>
-            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-          <![endif]-->
-    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-    <script src="/js/jquery-3.5.1.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-    <script src="/js/bootstrap.min.js"></script>
+        body>div.preloader {
+            position: fixed;
+            background: white;
+            width: 100%;
+            height: 100%;
+            z-index: 1071;
+            opacity: 0;
+            transition: opacity .5s ease;
+            overflow: hidden;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    <script src="/js/knockout-3.5.1.js"></script>
-    <script src="/js/Chart.js"></script>
+        body:not(.loaded)>div.preloader {
+            opacity: 1;
+        }
 
+        body:not(.loaded) {
+            overflow: hidden;
+        }
+
+        body.loaded>div.preloader {
+            animation: hidePreloader .5s linear .5s forwards;
+        }
+    </style>
+    <script>
+        window.addEventListener("load", function() {
+            setTimeout(function() {
+                document.querySelector('body').classList.add('loaded');
+            }, 300);
+        });
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/brand/favicon.png" type="image/png"><!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/libs/@fortawesome/fontawesome-free/css/all.min.css">
+    <!-- Quick CSS -->
+    <link rel="stylesheet" href="assets/css/quick-website.css" id="stylesheet">
 </head>
 
 <body>
-    <div class="text-center">
-        <h1>类测试工具</h1>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
-        <div class="col-md-8">
-            <table class="table table-striped row mx-0">
-                <thead class="w-100">
-                    <tr class="row mx-0">
-                        <th scope="col" class="col-8">类列表</th>
-                        <th scope="col" class="col-2"></th>
-                        <th scope="col" class="col-2"></th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: classes" class="w-100">
-                    <tr class="row mx-0">
-                        <td class="col-8"><span data-bind="text:$data.class_name"></span></td>
-                        <td class="col-2"><button type="button" class="btn btn-sm btn-secondary"
-                                data-bind="click:function(){removeClass($index())}">移除</button>
-                        </td>
-                        <td class="col-2"><button type="button" class="btn btn-sm btn-secondary"
-                                data-bind="attr:{onclick: 'show_method('+$index()+')'}">选择</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="col-md-offset-4 col-md-4">
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">选择Java文件</label>
-                    <input type="file" class="form-control-file" id="class_file">
-                </div>
-                <div>
-                    <button type="button" class="btn btn-default btn-secondary" onclick="uploadClass()">上传Java类</button>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-cookies" data-backdrop="false" aria-labelledby="modal-cookies" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-aside left-4 right-4 bottom-4">
+            <div class="modal-content bg-dark-dark">
+                <div class="modal-body">
+                    <!-- Text -->
+                    <p class="text-sm text-white mb-3">
+                        We use cookies so that our themes work for you. By using our website, you agree to our use of cookies.
+                    </p>
+                    <!-- Buttons -->
+                    <a href="pages/utility/terms.html" class="btn btn-sm btn-white" target="_blank">Learn more</a>
+                    <button type="button" class="btn btn-sm btn-primary mr-2" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <h3 data-bind="text:'类'+model.now_class()"></h3>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="index.html">
+                Java Class Test Tool
+            </a>
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mt-4 mt-lg-0 ml-auto">
+                    <li class="nav-item ">
+                        <a class="nav-link" href="#step1">Step 1</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="#step2">Step 2</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="#step3">Step 3</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
+    </nav>
+    <!-- Main content -->
+    <section class="slice py-5">
+        <div class="container">
+            <div class="row row-grid align-items-center">
+                <div class="col-12 col-md-5 col-lg-6 order-md-2">
+                    <!-- Image -->
+                    <figure class="w-100">
+                        <img alt="Image placeholder" src="assets/img/svg/illustrations/illustration-3.svg" class="img-fluid mw-md-120">
+                    </figure>
+                </div>
+                <div class="col-12 col-md-7 col-lg-6 order-md-1 pr-md-5">
+                    <!-- Heading -->
+                    <h1 class="display-4 text-center text-md-left mb-3">
+                        A convenient <br><strong class="text-primary">Java Class Test Tool</strong>
+                    </h1>
+                    <!-- Text -->
+                    <p class="lead text-center text-md-left text-muted">
+                        Just upload your Java Classes and test cases, then get results.
+                    </p>
+                    <!-- Buttons -->
+                    <div class="text-center text-md-left mt-5">
+                        <a href="#step1" class="btn btn-primary btn-icon">
+                            <span class="btn-inner--text">Get started</span><span class="btn-inner--icon">
+                                <i data-feather="arrow-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slice slice-lg pt-lg-6 pb-0 pb-lg-6" id="step1">
+        <div class="container">
+            <!-- Title -->
+            <!-- Section title -->
+            <div class="row mb-5 justify-content-center text-center">
+                <div class="col-lg-6">
+                    <span class="badge badge-soft-success badge-pill badge-lg">
+                        Step 1
+                    </span>
+                    <h2 class=" mt-4">上传自定义Java类并选择待测类</h2>
+                    <div class="mt-4 justify-content-center" style="display:flex">
+                        <div class="form-group mt-2">
+                            
+                            <input type="file" class="form-control-file" id="class_file">
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-default btn-secondary" onclick="uploadClass()">上传Java类</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="card border-0 bg-soft-success">
+                        <div class="card-body pb-2">
+                            <table class="table table-striped row mx-0">
+                                <thead class="w-100">
+                                    <tr class="row mx-0">
+                                        <th scope="col" class="col-8">类列表</th>
+                                        <th scope="col" class="col-2"></th>
+                                        <th scope="col" class="col-2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: classes" class="w-100">
+                                    <tr class="row mx-0">
+                                        <td class="col-8"><span data-bind="text:$data.class_name"></span></td>
+                                        <td class="col-2"><button type="button" class="btn btn-sm btn-secondary"
+                                                data-bind="click:function(){removeClass($index())}">移除</button>
+                                        </td>
+                                        <td class="col-2"><button type="button" class="btn btn-sm btn-secondary"
+                                                data-bind="attr:{onclick: 'show_method('+$index()+')'}">选择</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section class="slice slice-lg bg-section-dark pt-5 pt-lg-8" id="step2">
+        <!-- SVG separator -->
+        <div class="shape-container shape-line shape-position-top shape-orientation-inverse">
+            <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve" class="">
+                <polygon points="2560 0 2560 100 0 100"></polygon>
+            </svg>
         </div>
-        <div class="col-md-8">
-            <table class="table row mx-0">
-                <thead class="w-100">
-                    <tr class="row mx-0">
-                        <th scope="col" class="col-4">方法列表</th>
-                        <th scope="col" class="col-4">测试数据</th>
-                        <th scope="col" class="col-2"></th>
-                        <th scope="col" class="col-2"></th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: methods" class="w-100">
-                    <tr class="row mx-0">
-                        <td class="col-4"><a><span data-bind="text:$data.method"></span></a>
-                        </td>
-                        <td class="col-4">
-                            <a data-bind="text:$data.test_case"></a>
-                            <div data-bind="if:!$data.test_case" class="form-group">
-                                <label for="exampleFormControlFile1">选择测试用例</label>
-                                <input type="file" class="form-control-file" data-bind="attr:{id:$data.simple_name}">
+        <!-- Container -->
+        <div class="container position-relative zindex-100">
+            
+            <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col-md-10 text-center">
+                        <span class="badge badge-soft-success badge-pill badge-lg">
+                            Step 2
+                        </span>
+                        <div class="mt-4 mb-6">
+                            <h2 class="h1 text-white">
+                                选择待测方法并上传测试用例
+                            </h2>
+                            <h3 data-bind="text:'当前选中：类'+model.now_class()"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slice pt-0">
+        <div class="container position-relative zindex-100">
+            <div class="row">
+                <div class="col-xl-12 col-sm-12 mt-n7">
+                    <div class="card bg-soft-warning border-0 mb-5 hover-translate-y-n10">
+                        <div class="d-flex p-5">
+                            <table class="table row mx-0">
+                                <thead class="w-100">
+                                    <tr class="row mx-0">
+                                        <th scope="col" class="col-4">方法列表</th>
+                                        <th scope="col" class="col-4">测试数据</th>
+                                        <th scope="col" class="col-2"></th>
+                                        <th scope="col" class="col-2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: methods" class="w-100">
+                                    <tr class="row mx-0">
+                                        <td class="col-4"><a><span data-bind="text:$data.method"></span></a>
+                                        </td>
+                                        <td class="col-4">
+                                            <a data-bind="text:$data.test_case"></a>
+                                            <div data-bind="if:!$data.test_case" class="form-group" style="display: flex;">
+                                                <label for="exampleFormControlFile1">选择测试用例</label>
+                                                <input type="file" class="form-control-file" data-bind="attr:{id:$data.simple_name}">
+                                            </div>
+                                        </td>
+                                        <td class="col-3">
+                                            <div data-bind="if:$data.test_case">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-bind="click:function() { remove_test_case($index()) }">移除测试用例</button>
+                                            </div>
+                                            <div data-bind="if:!$data.test_case">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-bind="attr:{onclick:'add_test_case('+$index()+')'}">上传测试用例</button>
+                                            </div>
+                
+                                        </td>
+                                        <td class="col-1 mr-auto">
+                                            <div data-bind="if:$data.test_case">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-bind="click:function(){test($index())}">测试</button>
+                                            </div>
+                
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slice slice-lg pt-lg-6 pb-0 pb-lg-6" id="step3">
+        <div class="container">
+            <!-- Title -->
+            <!-- Section title -->
+            <div class="row mb-5 justify-content-center text-center">
+                <div class="col-lg-6">
+                    <span class="badge badge-soft-success badge-pill badge-lg">
+                        Step 3
+                    </span>
+                    <h2 class=" mt-4">测试结果</h2>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="card border-0 bg-soft-success">
+                        <div class="card-body pb-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-inline justify-content-center">
+                                        <div class="form-group form-check">
+                                            <input type="checkbox" class="form-check-input" id="compare_checked" onclick="start_compare()">
+                                            <label class="form-check-label" for="exampleCheck1">启用对照组&emsp;</label>
+                                        </div>
+                                        <div class="form-group form-check" data-bind="if:model.test_results().length">
+                                            <input type="checkbox" class="form-check-input" id="pie_checked" onclick="start_show_pie()">
+                                            <label class="form-check-label" for="exampleCheck1">查看缺陷图&emsp;</label>
+                                        </div>
+                                        <div class="form-group form-check"
+                                            data-bind="if:model.test_results().length&&model.test_results2().length">
+                                            <input type="checkbox" class="form-check-input" id="show_compare" onclick="show_compare()">
+                                            <label class="form-check-label" for="exampleCheck1">查看对比</label>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="row ml-1">
+                                        <h5 data-bind="text:'类'+model.result_name()"></h5>
+                                    </div>
+                                    <table class="table row mx-0">
+                                        <thead class="w-100">
+                                            <tr class="row mx-0">
+                                                <th scope="col" class="col-4">测试用例</th>
+                                                <th scope="col" class="col-3">预计结果</th>
+                                                <th scope="col" class="col-3">实际输出</th>
+                                                <th scope="col" class="col-2">测试结果</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-bind="foreach: test_results" class="w-100">
+                                            <tr class="row mx-0">
+                                                <td class="col-4 mr-auto" data-bind="text:$data.parameters">
+                                                </td>
+                                                <td class="col-3 mr-auto" data-bind="text:$data.right_result">
+                        
+                                                </td>
+                                                <td class="col-3 mr-auto" data-bind="text:$data.real_result">
+                        
+                                                </td>
+                                                <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
+                        
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div data-bind="if:is_compare">
+                                        <div class="row ml-1">
+                                            <h5 data-bind="text:'类'+model.result_name2()"></h5>
+                                        </div>
+                                        <table class="table row mx-0">
+                                            <thead class="w-100">
+                                                <tr class="row mx-0">
+                                                    <th scope="col" class="col-4">测试用例</th>
+                                                    <th scope="col" class="col-3">预计结果</th>
+                                                    <th scope="col" class="col-3">实际输出</th>
+                                                    <th scope="col" class="col-2">测试结果</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody data-bind="foreach: test_results2" class="w-100">
+                                                <tr class="row mx-0">
+                                                    <td class="col-4 mr-auto" data-bind="text:$data.parameters">
+                                                    </td>
+                                                    <td class="col-3 mr-auto" data-bind="text:$data.right_result">
+                        
+                                                    </td>
+                                                    <td class="col-3 mr-auto" data-bind="text:$data.real_result">
+                        
+                                                    </td>
+                                                    <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
+                        
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                        
+                                </div>
                             </div>
-                        </td>
-                        <td class="col-3">
-                            <div data-bind="if:$data.test_case">
-                                <button type="button" class="btn btn-secondary btn-sm"
-                                    data-bind="click:function() { remove_test_case($index()) }">移除测试用例</button>
+                        
+                            <div class="text-center" data-bind="if:is_show">
+                                <div class="row ">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <canvas id="pie" width="100%" height="100%"></canvas>
+                                    </div>
+                        
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <canvas id="pie2" width="100%" height="100%"></canvas>
+                                    </div>
+                        
+                                </div>
                             </div>
-                            <div data-bind="if:!$data.test_case">
-                                <button type="button" class="btn btn-secondary btn-sm"
-                                    data-bind="attr:{onclick:'add_test_case('+$index()+')'}">上传测试用例</button>
+                        
+                            <div class="row" data-bind="if:result_compared">
+                                <div class="col-md-12 text-center">
+                                    <table class="table row mx-0" data-bind="if:is_compare">
+                                        <thead class="w-100">
+                                            <tr class="row mx-0">
+                                                <th scope="col" class="col-3">#</th>
+                                                <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
+                                                </th>
+                                                <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
+                                                </th>
+                                                <th scope="col" class="col-3">对比结果</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-bind="foreach: test_results" class="w-100">
+                                            <tr class="row mx-0">
+                                                <td class="col-3 mr-auto" data-bind="text:'第'+($index()+1)+'次测试'">
+                                                </td>
+                                                <td class="col-3 mr-auto" data-bind="text:cal_result($data.result)">
+                        
+                                                </td>
+                                                <td class="col-3 mr-auto" data-bind="text:cal_result(model.test_results2()[$index()].result)">
+                        
+                                                </td>
+                                                <td class="col-3 mr-auto"
+                                                    data-bind="text:model.test_results2()[$index()].right_result==$data.right_result?'相同':'不同'">
+                        
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                        
                             </div>
-
-                        </td>
-                        <td class="col-1 mr-auto">
-                            <div data-bind="if:$data.test_case">
-                                <button type="button" class="btn btn-secondary btn-sm"
-                                    data-bind="click:function(){test($index())}">测试</button>
-                            </div>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-2">
-
-        </div>
-        <h4 class="col-md-8">
-            测试结果
-        </h4>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-
-        </div>
-        <div class="col-md-8">
-            <div class="form-inline">
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="compare_checked" onclick="start_compare()">
-                    <label class="form-check-label" for="exampleCheck1">启用对照组&emsp;</label>
-                </div>
-                <div class="form-group form-check" data-bind="if:model.test_results().length">
-                    <input type="checkbox" class="form-check-input" id="pie_checked" onclick="start_show_pie()">
-                    <label class="form-check-label" for="exampleCheck1">查看缺陷图&emsp;</label>
-                </div>
-                <div class="form-group form-check"
-                    data-bind="if:model.test_results().length&&model.test_results2().length">
-                    <input type="checkbox" class="form-check-input" id="show_compare" onclick="show_compare()">
-                    <label class="form-check-label" for="exampleCheck1">查看对比</label>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="row ml-1">
-                <h5 data-bind="text:'类'+model.result_name()"></h5>
+        </div>
+    </section>
+ 
+    <footer class="position-relative" id="footer-main">
+        <div class="footer pt-lg-7 footer-dark bg-dark">
+            <!-- SVG shape -->
+            <div class="shape-container shape-line shape-position-top shape-orientation-inverse">
+                <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;" xml:space="preserve" class=" fill-section-secondary">
+                    <polygon points="2560 0 2560 100 0 100"></polygon>
+                </svg>
             </div>
-            <table class="table row mx-0">
-                <thead class="w-100">
-                    <tr class="row mx-0">
-                        <th scope="col" class="col-4">测试用例</th>
-                        <th scope="col" class="col-3">预计结果</th>
-                        <th scope="col" class="col-3">实际输出</th>
-                        <th scope="col" class="col-2">测试结果</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: test_results" class="w-100">
-                    <tr class="row mx-0">
-                        <td class="col-4 mr-auto" data-bind="text:$data.parameters">
-                        </td>
-                        <td class="col-3 mr-auto" data-bind="text:$data.right_result">
+            <!-- Footer -->
+            <div class="container pt-4">
+                <div class="row">
+                    <div class="col-lg-12 mb-5 mb-lg-0">
+                        <!-- Theme's logo -->
+                        <a href="index.html">
+                            Java Class Test Tool
+                        </a>
+                        <!-- Webpixels' mission -->
+                        <p class="mt-4 text-sm opacity-8 pr-lg-4">A convenient Java Class Tool, just upload your Java classes & csv test cases, then get results.</p>
+                        <!-- Social -->
+                        <ul class="nav mt-4">
+                            <li class="nav-item">
+                                <a class="nav-link pl-0" href="" target="_blank">
+                                    <i class="fab fa-dribbble"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" target="_blank">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" target="_blank">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
-                        </td>
-                        <td class="col-3 mr-auto" data-bind="text:$data.real_result">
-
-                        </td>
-                        <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div data-bind="if:is_compare">
-                <div class="row ml-1">
-                    <h5 data-bind="text:'类'+model.result_name2()"></h5>
                 </div>
-                <table class="table row mx-0">
-                    <thead class="w-100">
-                        <tr class="row mx-0">
-                            <th scope="col" class="col-4">测试用例</th>
-                            <th scope="col" class="col-3">预计结果</th>
-                            <th scope="col" class="col-3">实际输出</th>
-                            <th scope="col" class="col-2">测试结果</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: test_results2" class="w-100">
-                        <tr class="row mx-0">
-                            <td class="col-4 mr-auto" data-bind="text:$data.parameters">
-                            </td>
-                            <td class="col-3 mr-auto" data-bind="text:$data.right_result">
-
-                            </td>
-                            <td class="col-3 mr-auto" data-bind="text:$data.real_result">
-
-                            </td>
-                            <td class="col-2 mr-auto" data-bind="text:cal_result($data.result)">
-
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <hr class="divider divider-fade divider-dark my-4">
+                <div class="row align-items-center justify-content-md-between pb-4">
+                    <div class="col-md-6">
+                        <div class="copyright text-sm font-weight-bold text-center text-md-left">
+                            Copyright &copy; 2020. Rest&Rent软件测试项目组  All rights reserved.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="nav justify-content-center justify-content-md-end mt-3 mt-md-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Terms
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Privacy
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Cookies
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-
         </div>
-    </div>
-
-    <div class="text-center" data-bind="if:is_show">
-        <div class="row ">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <canvas id="pie" width="100%" height="100%"></canvas>
-            </div>
-
-        </div>
-        <div class="row ">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <canvas id="pie2" width="100%" height="100%"></canvas>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row" data-bind="if:result_compared">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <table class="table row mx-0" data-bind="if:is_compare">
-                <thead class="w-100">
-                    <tr class="row mx-0">
-                        <th scope="col" class="col-3">#</th>
-                        <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
-                        </th>
-                        <th scope="col" class="col-3" data-bind="text:'类'+model.test_results()[0].class_name">
-                        </th>
-                        <th scope="col" class="col-3">对比结果</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: test_results" class="w-100">
-                    <tr class="row mx-0">
-                        <td class="col-3 mr-auto" data-bind="text:'第'+($index()+1)+'次测试'">
-                        </td>
-                        <td class="col-3 mr-auto" data-bind="text:cal_result($data.result)">
-
-                        </td>
-                        <td class="col-3 mr-auto" data-bind="text:cal_result(model.test_results2()[$index()].result)">
-
-                        </td>
-                        <td class="col-3 mr-auto"
-                            data-bind="text:model.test_results2()[$index()].right_result==$data.right_result?'相同':'不同'">
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-</body>
-
-<script>
-    var model = {
-        classes: ko.observableArray([]),
-        methods: ko.observableArray([]),
-        test_results: ko.observableArray([]),
-        test_results2: ko.observableArray([]),
-        is_compare: ko.observable(false),
-        is_show: ko.observable(false),
-        result_compared: ko.observable(false),
-        now_class: ko.observable(''),
-        result_name: ko.observable(''),
-        result_name2: ko.observable('')
-    }
-    ko.applyBindings(model)
-    $(document).ready(
-        () => {
-            $.get("/api/GetClasses", result => {
-                console.log(result);
-                model.classes(result)
+    </footer>
+    <!-- Core JS  -->
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/libs/svg-injector/dist/svg-injector.min.js"></script>
+    <script src="assets/libs/feather-icons/dist/feather.min.js"></script>
+    <!-- Quick JS -->
+    <script src="assets/js/quick-website.js"></script>
+    <script src="assets/js/knockout-3.5.1.js"></script>
+    <script src="assets/js/Chart.js"></script>
+    <!-- Feather Icons -->
+    <script>
+        feather.replace({
+            'width': '1em',
+            'height': '1em'
+        })
+    </script>
+    <script>
+        var model = {
+            classes: ko.observableArray([]),
+            methods: ko.observableArray([]),
+            test_results: ko.observableArray([]),
+            test_results2: ko.observableArray([]),
+            is_compare: ko.observable(false),
+            is_show: ko.observable(false),
+            result_compared: ko.observable(false),
+            now_class: ko.observable(''),
+            result_name: ko.observable(''),
+            result_name2: ko.observable('')
+        }
+        ko.applyBindings(model)
+        $(document).ready(
+            () => {
+                $.get("api/GetClasses", result => {
+                    console.log(result);
+                    model.classes(result)
+                })
+    
+            }
+        )
+    
+        function show_method(index) {
+            var methods = new Array()
+            console.log(model.classes()[index])
+            var test_cases = model.classes()[index].test_cases;
+            var tmp_methods = model.classes()[index].methods.name;
+            var simple_names = model.classes()[index].methods.simple_name;
+            var name = model.classes()[index].class_name
+            for (var i = 0; i < tmp_methods.length; ++i) {
+                var obj = new Object()
+                obj.name = name
+                obj.method = tmp_methods[i]
+                obj.test_case = test_cases[i]
+                obj.simple_name = simple_names[i]
+                methods[methods.length] = obj
+            }
+            console.log(methods)
+            model.methods(methods)
+            model.now_class(model.classes()[index].class_name)
+        }
+    
+        function add_test_case(index) {
+            console.log("sss")
+            var data = new FormData()
+            var method = model.methods()[index]
+            var file = $("#" + method.simple_name)[0].files
+            console.log(file)
+            if (!file.length) {
+                return;
+            }
+            data.append("file", file[0]);
+            data.append('class_name', method.name)
+            data.append('method_name', method.simple_name)
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                url: "api/uploadTestCase",//url
+                data: data,
+                processData: false,
+                success: result => {
+                    console.log(result)
+                    location.reload();
+                },
+                contentType: false
             })
-
         }
-    )
-
-    function show_method(index) {
-        var methods = new Array()
-        console.log(model.classes()[index])
-        var test_cases = model.classes()[index].test_cases;
-        var tmp_methods = model.classes()[index].methods.name;
-        var simple_names = model.classes()[index].methods.simple_name;
-        var name = model.classes()[index].class_name
-        for (var i = 0; i < tmp_methods.length; ++i) {
-            var obj = new Object()
-            obj.name = name
-            obj.method = tmp_methods[i]
-            obj.test_case = test_cases[i]
-            obj.simple_name = simple_names[i]
-            methods[methods.length] = obj
+    
+        function remove_test_case(index) {
+            var method = model.methods()[index]
+            $.get("api/removeMethod", { class_name: method.name, method_name: method.simple_name }, result => {
+                location.reload();
+            })
         }
-        console.log(methods)
-        model.methods(methods)
-        model.now_class(model.classes()[index].class_name)
-    }
-
-    function add_test_case(index) {
-        console.log("sss")
-        var data = new FormData()
-        var method = model.methods()[index]
-        var file = $("#" + method.simple_name)[0].files
-        console.log(file)
-        if (!file.length) {
-            return;
+        function removeClass(index) {
+            $.get("api/removeClass", { class_name: model.classes()[index].class_name }, result => {
+                location.reload();
+            })
         }
-        data.append("file", file[0]);
-        data.append('class_name', method.name)
-        data.append('method_name', method.simple_name)
-        $.ajax({
-            //几个参数需要注意一下
-            type: "POST",//方法类型
-            url: "/api/uploadTestCase",//url
-            data: data,
-            processData: false,
-            success: result => {
+        function uploadClass(index) {
+            var data = new FormData()
+            var file = $("#class_file")[0].files
+            console.log(file)
+            if (!file.length) {
+                return;
+            }
+            data.append("file", file[0]);
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                url: "api/uploadClass",//url
+                data: data,
+                processData: false,
+                success: result => {
+                    location.reload();
+                },
+                contentType: false
+            })
+        }
+        function test(index) {
+            var method = model.methods()[index]
+            $.get("api/test", { class_name: method.name, method_name: method.simple_name }, result => {
                 console.log(result)
-                location.reload();
-            },
-            contentType: false
-        })
-    }
-
-    function remove_test_case(index) {
-        var method = model.methods()[index]
-        $.get("/api/removeMethod", { class_name: method.name, method_name: method.simple_name }, result => {
-            location.reload();
-        })
-    }
-    function removeClass(index) {
-        $.get("/api/removeClass", { class_name: model.classes()[index].class_name }, result => {
-            location.reload();
-        })
-    }
-    function uploadClass(index) {
-        var data = new FormData()
-        var file = $("#class_file")[0].files
-        console.log(file)
-        if (!file.length) {
-            return;
-        }
-        data.append("file", file[0]);
-        $.ajax({
-            //几个参数需要注意一下
-            type: "POST",//方法类型
-            url: "/api/uploadClass",//url
-            data: data,
-            processData: false,
-            success: result => {
-                location.reload();
-            },
-            contentType: false
-        })
-    }
-    function test(index) {
-        var method = model.methods()[index]
-        $.get("/api/test", { class_name: method.name, method_name: method.simple_name }, result => {
-            console.log(result)
-            if (model.test_results().length == 0 || !model.is_compare()) {
-                model.result_name(method.name)
-                model.test_results(result)
-            } else {
-                model.result_name2(method.name)
-                model.test_results2(result)
-            }
-            start_show_pie();
-
-        })
-    }
-
-    function start_compare() {
-        model.is_compare($("#compare_checked")[0].checked)
-        if (!model.is_compare()) {
-            model.test_results2([])
-            model.result_name2('')
-        }
-    }
-
-    function start_show_pie() {
-        model.is_show($("#pie_checked")[0].checked)
-        if (model.is_show()) {
-            show_pie();
-        }
-
-    }
-    function show_compare() {
-        model.result_compared($("#show_compare")[0].checked)
-    }
-
-    function show_pie() {
-        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#292b2c';
-        var ctx = $("#pie");
-        var error_count = 0
-        var right_count = 0
-        var runtime_error_count = 0
-        for (var i = 0; i < model.test_results().length; ++i) {
-            var item = model.test_results()[i]
-            if (item.result) {
-                ++right_count
-            } else {
-                ++error_count
-            }
-        }
-        console.log(right_count)
-        console.log(error_count)
-        var myPieChart = new Chart(ctx, {
-            options: {
-                title: { //标题
-                    display: true,
-                    text: model.test_results()[0].class_name,
+                if (model.test_results().length == 0 || !model.is_compare()) {
+                    model.result_name(method.name)
+                    model.test_results(result)
+                } else {
+                    model.result_name2(method.name)
+                    model.test_results2(result)
                 }
-            },
-            type: 'pie',
-            data: {
-                labels: ["error_value", "correct_value","runtime_error"],
-                datasets: [{
-                    data: [error_count, right_count,runtime_error_count],
-                    backgroundColor: ['#007bff', '#dc3545','#28a745']
-                }]
-            }
-        })
-
-        if (!model.test_results2().length) {
-            return;
+                start_show_pie();
+    
+            })
         }
-
-        ctx = $("#pie2");
-        error_count = 0
-        right_count = 0
-        runtime_error_count = 0
-        for (var i = 0; i < model.test_results2().length; ++i) {
-            var item = model.test_results()[i]
-            if (item.result == null) {
-                runtime_error_count++
-            } else if (item.result) {
-                right_count++
-            } else {
-                error_count++
+    
+        function start_compare() {
+            model.is_compare($("#compare_checked")[0].checked)
+            if (!model.is_compare()) {
+                model.test_results2([])
+                model.result_name2('')
             }
         }
-        console.log(right_count)
-        console.log(error_count)
-        myPieChart = new Chart(ctx, {
-            options: {
-                title: { //标题
-                    display: true,
-                    text: model.test_results2()[0].class_name,
+    
+        function start_show_pie() {
+            model.is_show($("#pie_checked")[0].checked)
+            if (model.is_show()) {
+                show_pie();
+            }
+    
+        }
+        function show_compare() {
+            model.result_compared($("#show_compare")[0].checked)
+        }
+    
+        function show_pie() {
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
+            var ctx = $("#pie");
+            var error_count = 0
+            var right_count = 0
+            var runtime_error_count = 0
+            for (var i = 0; i < model.test_results().length; ++i) {
+                var item = model.test_results()[i]
+                if (item.result) {
+                    ++right_count
+                } else {
+                    ++error_count
                 }
-            },
-            type: 'pie',
-            data: {
-                labels: ["error_value", "correct_value","runtime_error"],
-                datasets: [{
-                    data: [error_count, right_count,runtime_error_count],
-                    backgroundColor: ['#007bff', '#dc3545','#28a745']
-                }]
             }
-        })
-    }
-
-    function cal_result(status) {
-        console.log(status,"ddd")
-        if (status == null) {
-            return "运行错误"
-        } else if (status) {
-            return "输出正确"
-        } else {
-            return "输出错误"
+            console.log(right_count)
+            console.log(error_count)
+            var myPieChart = new Chart(ctx, {
+                options: {
+                    title: { //标题
+                        display: true,
+                        text: model.test_results()[0].class_name,
+                    }
+                },
+                type: 'pie',
+                data: {
+                    labels: ["error_value", "correct_value","runtime_error"],
+                    datasets: [{
+                        data: [error_count, right_count,runtime_error_count],
+                        backgroundColor: ['#DC143C', '#3CB371','#0000CD']
+                    }]
+                }
+            })
+    
+            if (!model.test_results2().length) {
+                return;
+            }
+    
+            ctx = $("#pie2");
+            error_count = 0
+            right_count = 0
+            runtime_error_count = 0
+            for (var i = 0; i < model.test_results2().length; ++i) {
+                var item = model.test_results()[i]
+                if (item.result == null) {
+                    runtime_error_count++
+                } else if (item.result) {
+                    right_count++
+                } else {
+                    error_count++
+                }
+            }
+            console.log(right_count)
+            console.log(error_count)
+            myPieChart = new Chart(ctx, {
+                options: {
+                    title: { //标题
+                        display: true,
+                        text: model.test_results2()[0].class_name,
+                    }
+                },
+                type: 'pie',
+                data: {
+                    labels: ["error_value", "correct_value","runtime_error"],
+                    datasets: [{
+                        data: [error_count, right_count,runtime_error_count],
+                        backgroundColor: ['#007bff', '#dc3545','#28a745']
+                    }]
+                }
+            })
         }
-    }
-</script>
+    
+        function cal_result(status) {
+            console.log(status,"ddd")
+            if (status == null) {
+                return "运行错误"
+            } else if (status) {
+                return "输出正确"
+            } else {
+                return "输出错误"
+            }
+        }
+    </script>
+    
+</body>
 
 </html>
