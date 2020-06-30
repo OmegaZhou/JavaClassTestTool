@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="assets/libs/@fortawesome/fontawesome-free/css/all.min.css">
     <!-- Quick CSS -->
     <link rel="stylesheet" href="assets/css/quick-website.css" id="stylesheet">
+    <link href="assets/css/toastr.min.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -444,7 +445,7 @@
 
                                                 </td>
                                                 <td class="col-3 mr-auto"
-                                                    data-bind="text:model.test_results2()[$index()].right_result==$data.right_result?'相同':'不同'">
+                                                    data-bind="text:cal_result(model.test_results2()[$index()].result)==cal_result($data.result)?'相同':'不同'">
 
                                                 </td>
                                             </tr>
@@ -553,6 +554,7 @@
     <script src="assets/js/quick-website.js"></script>
     <script src="assets/js/knockout-3.5.1.js"></script>
     <script src="assets/js/Chart.js"></script>
+    <script src="assets/js/toastr.min.js"></script>
     <!-- Feather Icons -->
     <script>
         feather.replace({
@@ -713,6 +715,10 @@
                     model.result_name(method.name)
                     model.test_results(result)
                 } else {
+                    if(!check_test_case(model.test_results(),result)){
+                        toastr.error("测试用例不一致")
+                        return;
+                    }
                     model.result_name2(method.name)
                     model.test_results2(result)
                 }
@@ -739,7 +745,23 @@
         function show_compare() {
             model.result_compared($("#show_compare")[0].checked)
         }
-
+        
+        function check_test_case(result1,result2){
+            if(result1.length!=result2.length){
+                return false;
+            }
+            for(var i=0;i<result1.length;++i){
+                var parameters1=result1[i].parameters
+                var parameters2=result2[i].parameters
+                if(parameters1.toString()!=parameters2.toString()){
+                    return false;
+                }
+                if(result1[i].right_result!=result2[i].right_result){
+                    return false;
+                }
+            }
+            return true;
+        }
         function show_pie() {
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';
@@ -783,7 +805,7 @@
             right_count = 0
             runtime_error_count = 0
             for (var i = 0; i < model.test_results2().length; ++i) {
-                var item = model.test_results()[i]
+                var item = model.test_results2()[i]
                 if (item.result == null) {
                     runtime_error_count++
                 } else if (item.result) {
@@ -806,7 +828,7 @@
                     labels: ["error_value", "correct_value", "runtime_error"],
                     datasets: [{
                         data: [error_count, right_count, runtime_error_count],
-                        backgroundColor: ['#007bff', '#dc3545', '#28a745']
+                        backgroundColor: ['#DC143C', '#3CB371', '#0000CD']
                     }]
                 }
             })
